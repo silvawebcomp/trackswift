@@ -45,27 +45,24 @@
 
         <div class="route relative hidden min-h-[500px] overflow-hidden rounded-[2rem] lg:block" aria-label="Illustrated shipment route">
           <svg class="absolute inset-0 h-full w-full" viewBox="0 0 620 520" fill="none"><path d="M105 75C100 170 205 120 235 225c25 90 150 25 160 135 5 55 55 65 120 85" stroke="#1463ff" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12"/></svg>
-          <div class="absolute left-[9%] top-[7%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-2xl text-white ring-8 ring-blue/10">▣</span><div><b>Warehouse</b><p class="text-sm text-slate-500">Order Picked Up<br>May 10, 09:15 AM</p></div></div>
-          <div class="absolute left-[35%] top-[39%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-2xl text-white ring-8 ring-blue/10">▰</span><div><b>Transit Hub</b><p class="text-sm text-blue">In Transit</p><p class="text-sm text-slate-500">May 11, 04:40 AM</p></div></div>
-          <div class="absolute left-[61%] top-[64%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-2xl text-white ring-8 ring-green/10">◉</span><div><b>Local Facility</b><p class="text-sm text-green">Out for Delivery</p></div></div>
-          <div class="absolute bottom-[4%] right-[5%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-2xl text-white ring-8 ring-green/10">⌂</span><div><b>Destination</b><p class="text-sm text-slate-500">Expected May 11, 06:00 PM</p></div></div>
+          <div class="absolute left-[9%] top-[7%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-sm font-extrabold text-white ring-8 ring-blue/10">IT</span><div><b>Milan, Italy</b><p class="text-sm text-slate-500">Package Picked Up<br>July 18, 09:15 AM</p></div></div>
+          <div class="absolute left-[35%] top-[39%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-sm font-extrabold text-white ring-8 ring-blue/10">AIR</span><div><b>International Transit</b><p class="text-sm text-blue">Current stage</p><p class="text-sm text-slate-500">July 22, 04:40 AM</p></div></div>
+          <div class="absolute left-[61%] top-[64%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-sm font-extrabold text-white ring-8 ring-green/10">US</span><div><b>New York Gateway</b><p class="text-sm text-slate-500">Customs &amp; arrival</p></div></div>
+          <div class="absolute bottom-[4%] right-[5%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-sm font-extrabold text-white ring-8 ring-green/10">NY</span><div><b>Final Destination</b><p class="text-sm text-slate-500">Expected July 26, 06:00 PM</p></div></div>
         </div>
       </div>
     </section>
 
     <section id="how" class="mx-auto max-w-7xl px-5 pb-24 lg:px-8">
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:p-9">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6"><h2 class="text-xl font-extrabold">Tracking ID: <span class="text-blue">TS-847291</span></h2><p class="text-sm text-slate-500">Last updated: May 11, 10:15 AM</p></div>
-        <ol class="mt-10 grid gap-7 sm:grid-cols-4">
-          <li class="relative text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-blue font-bold text-white ring-4 ring-blue/10">✓</span><b class="mt-3 block">Order Picked Up</b><small class="text-slate-500">May 10, 09:15 AM</small></li>
-          <li class="relative text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-blue font-bold text-white ring-4 ring-blue/20">●</span><b class="mt-3 block text-blue">In Transit</b><small class="text-slate-500">May 11, 04:40 AM</small></li>
-          <li class="text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full border-2 border-slate-300 bg-white text-slate-400">3</span><b class="mt-3 block">Out for Delivery</b><small class="text-slate-500">Next milestone</small></li>
-          <li class="text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full border-2 border-slate-300 bg-white text-slate-400">4</span><b class="mt-3 block">Delivered</b><small class="text-slate-500">Pending</small></li>
-        </ol>
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6"><div><h2 class="text-xl font-extrabold">Tracking ID: <span class="text-blue">TS-847291</span></h2><p class="mt-1 text-sm text-slate-500">Milan, Italy <span aria-hidden="true">→</span> New York, USA</p></div><div class="text-right"><p id="currentStatus" class="font-bold text-blue">International Transit</p><p class="text-sm text-slate-500">Last updated: July 22, 04:40 AM</p></div></div>
+        <div class="mt-8 overflow-x-auto pb-4" aria-label="Shipment progress">
+          <ol id="shipmentTimeline" class="grid min-w-[1240px] grid-cols-10 gap-3"></ol>
+        </div>
         <dl class="mt-10 grid gap-6 border-t border-slate-200 pt-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div><dt class="text-sm font-semibold text-slate-500">Estimated Delivery</dt><dd class="mt-2 font-bold">May 11, 06:00 PM</dd><dd class="text-sm text-slate-500">Today</dd></div>
-          <div><dt class="text-sm font-semibold text-slate-500">Current Location</dt><dd class="mt-2 font-bold">Chicago, IL, USA</dd><dd class="text-sm text-slate-500">Transit Hub</dd></div>
-          <div><dt class="text-sm font-semibold text-slate-500">Carrier Notes</dt><dd class="mt-2">Shipment en route to local facility.</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Estimated Delivery</dt><dd class="mt-2 font-bold">July 26, 06:00 PM</dd><dd class="text-sm text-slate-500">New York local time</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Current Location</dt><dd class="mt-2 font-bold">International Transit</dd><dd class="text-sm text-slate-500">Italy to United States</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Carrier Notes</dt><dd id="carrierNotes" class="mt-2">Flight departed Milan gateway. Shipment is on schedule.</dd></div>
           <div><dt class="text-sm font-semibold text-slate-500">Weight / Dimensions</dt><dd class="mt-2 font-bold">2.4 kg</dd><dd class="text-sm text-slate-500">30 × 25 × 15 cm</dd></div>
         </dl>
       </div>
@@ -88,9 +85,9 @@
         </div>
         <div class="grid overflow-hidden rounded-2xl bg-white text-navy shadow-2xl xl:grid-cols-[1.2fr_.8fr]">
           <div class="overflow-x-auto border-b border-slate-200 xl:border-b-0 xl:border-r"><div class="flex items-center justify-between p-6"><h3 class="font-extrabold">Active Shipments</h3><button class="text-sm font-bold text-blue">View all</button></div>
-            <table class="w-full min-w-[520px] text-left text-sm"><thead class="border-y border-slate-200 bg-mist text-xs text-slate-500"><tr><th class="p-4">Tracking ID</th><th class="p-4">Customer</th><th class="p-4">Status</th><th class="p-4">Last Updated</th></tr></thead><tbody id="shipmentRows" class="divide-y divide-slate-100"><tr><td class="p-4 font-bold text-blue">TS-847291</td><td class="p-4">Alex Johnson</td><td class="p-4"><span class="rounded-md bg-blue/10 px-2 py-1 font-semibold text-blue">In Transit</span></td><td class="p-4 text-slate-500">May 11, 10:15 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-836554</td><td class="p-4">Maria Gomez</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Out for Delivery</span></td><td class="p-4 text-slate-500">May 11, 09:30 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-829113</td><td class="p-4">David Lee</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Delivered</span></td><td class="p-4 text-slate-500">May 10, 06:45 PM</td></tr></tbody></table>
+            <table class="w-full min-w-[520px] text-left text-sm"><thead class="border-y border-slate-200 bg-mist text-xs text-slate-500"><tr><th class="p-4">Tracking ID</th><th class="p-4">Customer</th><th class="p-4">Status</th><th class="p-4">Last Updated</th></tr></thead><tbody id="shipmentRows" class="divide-y divide-slate-100"><tr><td class="p-4 font-bold text-blue">TS-847291</td><td class="p-4">Alex Johnson</td><td class="p-4"><span id="activeShipmentStatus" class="rounded-md bg-blue/10 px-2 py-1 font-semibold text-blue">International Transit</span></td><td class="p-4 text-slate-500">July 22, 04:40 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-836554</td><td class="p-4">Maria Gomez</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Out for Delivery</span></td><td class="p-4 text-slate-500">July 22, 09:30 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-829113</td><td class="p-4">David Lee</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Delivered</span></td><td class="p-4 text-slate-500">July 21, 06:45 PM</td></tr></tbody></table>
           </div>
-          <form id="updateForm" class="p-6"><h3 class="font-extrabold">Update Status</h3><label class="mt-5 block text-xs font-bold" for="adminId">Tracking ID</label><input id="adminId" required value="TS-847291" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue focus:ring-4 focus:ring-blue/10"><label class="mt-4 block text-xs font-bold" for="status">Status</label><select id="status" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue"><option>Processing</option><option selected>In Transit</option><option>Customs Clearance</option><option>Out for Delivery</option><option>Delivered</option></select><label class="mt-4 block text-xs font-bold" for="notes">Location / Notes</label><textarea id="notes" rows="4" class="mt-2 w-full resize-none rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue" placeholder="Add the current location and carrier notes">Shipment en route to local facility.</textarea><button class="mt-5 w-full rounded-lg bg-blue px-4 py-3.5 font-bold text-white transition hover:bg-blue/90">Save and Notify Customer</button><p id="saveMessage" class="mt-3 min-h-5 text-sm font-semibold text-green" aria-live="polite"></p></form>
+          <form id="updateForm" class="p-6"><h3 class="font-extrabold">Update Status</h3><label class="mt-5 block text-xs font-bold" for="adminId">Tracking ID</label><input id="adminId" required value="TS-847291" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue focus:ring-4 focus:ring-blue/10"><label class="mt-4 block text-xs font-bold" for="status">Progress Stage</label><select id="status" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue"><option>Shipment Created</option><option>Processing in Italy</option><option>Package Picked Up</option><option>Departed Origin Facility</option><option selected>International Transit</option><option>Customs Clearance</option><option>Arrived in United States</option><option>Local Distribution Facility</option><option>Out for Delivery</option><option>Delivered</option></select><label class="mt-4 block text-xs font-bold" for="notes">Location / Notes</label><textarea id="notes" rows="4" class="mt-2 w-full resize-none rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue" placeholder="Add the current location and carrier notes">Flight departed Milan gateway. Shipment is on schedule.</textarea><button class="mt-5 w-full rounded-lg bg-blue px-4 py-3.5 font-bold text-white transition hover:bg-blue/90">Save and Notify Customer</button><p id="saveMessage" class="mt-3 min-h-5 text-sm font-semibold text-green" aria-live="polite"></p></form>
         </div>
       </div>
     </section>
@@ -99,8 +96,33 @@
   <footer id="support" class="bg-white"><div class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8"><div><div class="text-xl font-extrabold">TrackSwift <span class="text-blue">⟶</span></div><p class="mt-2 text-xs text-slate-500">© 2026 TrackSwift. All rights reserved.</p></div><nav class="flex flex-wrap gap-6 text-sm font-semibold"><a href="#">Privacy Policy</a><a href="mailto:support@trackswift.example">Customer Support</a><a href="#admin">Admin Login</a></nav></div></footer>
 
   <script>
+    const shipmentStages = [
+      {name:'Shipment Created', detail:'July 17'},
+      {name:'Processing in Italy', detail:'July 17'},
+      {name:'Package Picked Up', detail:'July 18'},
+      {name:'Departed Origin Facility', detail:'July 20'},
+      {name:'International Transit', detail:'Current'},
+      {name:'Customs Clearance', detail:'Pending'},
+      {name:'Arrived in United States', detail:'Pending'},
+      {name:'Local Distribution Facility', detail:'Pending'},
+      {name:'Out for Delivery', detail:'Pending'},
+      {name:'Delivered', detail:'Pending'}
+    ];
+    let activeStageIndex = 4;
+    function renderTimeline(){
+      document.getElementById('shipmentTimeline').innerHTML=shipmentStages.map((stage,index)=>{
+        const complete=index<activeStageIndex;
+        const active=index===activeStageIndex;
+        const circle=complete?'✓':String(index+1);
+        const stateClass=complete?'bg-blue text-white':active?'border-2 border-blue bg-white text-blue ring-4 ring-blue/10':'border-2 border-slate-300 bg-white text-slate-400';
+        const labelClass=active?'text-blue':'text-navy';
+        const detail=active?'Current stage':complete?stage.detail:'Pending';
+        return `<li class="relative text-center"><span class="mx-auto grid h-11 w-11 place-items-center rounded-full font-bold ${stateClass}">${circle}</span><b class="mt-3 block text-xs leading-4 ${labelClass}">${stage.name}</b><small class="mt-1 block text-[11px] text-slate-500">${detail}</small></li>`;
+      }).join('');
+    }
+    renderTimeline();
     document.getElementById('trackForm').addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('trackingId').value.trim();const out=document.getElementById('trackMessage');out.textContent=id?`Shipment ${id.toUpperCase()} found — showing latest tracking activity below.`:'Enter a tracking ID to continue.';if(id)document.getElementById('how').scrollIntoView({behavior:'smooth'});});
-    document.getElementById('updateForm').addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('adminId').value.trim().toUpperCase();const status=document.getElementById('status').value;document.getElementById('saveMessage').textContent=`${id} updated to “${status}”. Customer notified.`;});
+    document.getElementById('updateForm').addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('adminId').value.trim().toUpperCase();const status=document.getElementById('status').value;const notes=document.getElementById('notes').value.trim();activeStageIndex=shipmentStages.findIndex(stage=>stage.name===status);renderTimeline();document.getElementById('currentStatus').textContent=status;document.getElementById('activeShipmentStatus').textContent=status;if(notes)document.getElementById('carrierNotes').textContent=notes;document.getElementById('saveMessage').textContent=`${id} updated to “${status}”. Customer notified.`;document.getElementById('how').scrollIntoView({behavior:'smooth'});});
   </script>
 </body>
 </html>
