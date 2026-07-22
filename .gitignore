@@ -3,3 +3,9 @@ Thumbs.db
 *.log
 .idea/
 .vscode/
+node_modules/
+.env
+.env.*
+!.env.example
+prisma/*.db
+prisma/*.db-journal
