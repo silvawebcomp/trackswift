@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TrackSwift gives customers real-time shipment visibility and administrators secure status controls." />
+  <title>TrackSwift — Real-time shipment tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config={theme:{extend:{colors:{navy:'#081b33',blue:'#1463ff',green:'#16b86e',mist:'#f5f8fc'},fontFamily:{sans:['Inter','ui-sans-serif','system-ui']},boxShadow:{soft:'0 20px 55px rgba(8,27,51,.09)'}}}}
+  </script>
+  <style>
+    *{box-sizing:border-box} body{margin:0;color:#081b33;background:#fff} button,input,select,textarea{font:inherit}
+    .route{background-image:radial-gradient(circle,#cbd9ee 1px,transparent 1px);background-size:18px 18px}
+    .reveal{opacity:1;transform:none}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body class="font-sans antialiased">
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+      <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight"><span>TrackSwift</span><span class="text-blue">⟶</span></a>
+      <nav class="hidden items-center gap-8 text-sm font-semibold md:flex"><a href="#track">Track</a><a href="#how">How It Works</a><a href="#features">Features</a><a href="#support">Support</a></nav>
+      <a href="#admin" class="rounded-lg border border-blue px-4 py-2.5 text-sm font-bold text-blue transition hover:bg-blue hover:text-white">Admin Portal</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="track" class="overflow-hidden">
+      <div class="mx-auto grid min-h-[660px] max-w-7xl items-center gap-10 px-5 py-16 lg:grid-cols-[.92fr_1.08fr] lg:px-8 lg:py-20">
+        <div class="reveal max-w-xl">
+          <h1 class="text-5xl font-extrabold leading-[1.04] tracking-[-.045em] sm:text-6xl">Real-time tracking from warehouse to doorstep.</h1>
+          <p class="mt-7 max-w-lg text-lg leading-8 text-slate-600">Track every step of your shipment in real time. Accurate updates, secure handling, delivered with confidence.</p>
+          <form id="trackForm" class="mt-9 flex flex-col gap-3 sm:flex-row" aria-label="Track a shipment">
+            <label class="sr-only" for="trackingId">Tracking ID</label>
+            <div class="flex min-h-16 flex-1 items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 shadow-sm focus-within:border-blue focus-within:ring-4 focus-within:ring-blue/10">
+              <svg class="h-6 w-6 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="M4 7v10l8 4 8-4V7M12 11v10"/></svg>
+              <input id="trackingId" class="w-full border-0 bg-transparent py-4 outline-none" placeholder="Enter tracking ID" autocomplete="off" />
+            </div>
+            <button class="min-h-16 rounded-xl bg-blue px-7 font-bold text-white shadow-lg shadow-blue/20 transition hover:-translate-y-0.5 hover:bg-blue/90">Track Shipment</button>
+          </form>
+          <p id="trackMessage" class="mt-3 min-h-6 text-sm font-semibold text-blue" aria-live="polite"></p>
+          <a href="#admin" class="mt-2 inline-flex items-center gap-2 rounded-lg border border-blue px-5 py-3 text-sm font-bold text-blue hover:bg-mist">Admin Portal <span>→</span></a>
+        </div>
+
+        <div class="route relative hidden min-h-[500px] overflow-hidden rounded-[2rem] lg:block" aria-label="Illustrated shipment route">
+          <svg class="absolute inset-0 h-full w-full" viewBox="0 0 620 520" fill="none"><path d="M105 75C100 170 205 120 235 225c25 90 150 25 160 135 5 55 55 65 120 85" stroke="#1463ff" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12"/></svg>
+          <div class="absolute left-[9%] top-[7%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-2xl text-white ring-8 ring-blue/10">▣</span><div><b>Warehouse</b><p class="text-sm text-slate-500">Order Picked Up<br>May 10, 09:15 AM</p></div></div>
+          <div class="absolute left-[35%] top-[39%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-blue text-2xl text-white ring-8 ring-blue/10">▰</span><div><b>Transit Hub</b><p class="text-sm text-blue">In Transit</p><p class="text-sm text-slate-500">May 11, 04:40 AM</p></div></div>
+          <div class="absolute left-[61%] top-[64%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-2xl text-white ring-8 ring-green/10">◉</span><div><b>Local Facility</b><p class="text-sm text-green">Out for Delivery</p></div></div>
+          <div class="absolute bottom-[4%] right-[5%] flex items-center gap-4"><span class="grid h-14 w-14 place-items-center rounded-full bg-green text-2xl text-white ring-8 ring-green/10">⌂</span><div><b>Destination</b><p class="text-sm text-slate-500">Expected May 11, 06:00 PM</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="mx-auto max-w-7xl px-5 pb-24 lg:px-8">
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:p-9">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6"><h2 class="text-xl font-extrabold">Tracking ID: <span class="text-blue">TS-847291</span></h2><p class="text-sm text-slate-500">Last updated: May 11, 10:15 AM</p></div>
+        <ol class="mt-10 grid gap-7 sm:grid-cols-4">
+          <li class="relative text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-blue font-bold text-white ring-4 ring-blue/10">✓</span><b class="mt-3 block">Order Picked Up</b><small class="text-slate-500">May 10, 09:15 AM</small></li>
+          <li class="relative text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-blue font-bold text-white ring-4 ring-blue/20">●</span><b class="mt-3 block text-blue">In Transit</b><small class="text-slate-500">May 11, 04:40 AM</small></li>
+          <li class="text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full border-2 border-slate-300 bg-white text-slate-400">3</span><b class="mt-3 block">Out for Delivery</b><small class="text-slate-500">Next milestone</small></li>
+          <li class="text-center"><span class="mx-auto grid h-12 w-12 place-items-center rounded-full border-2 border-slate-300 bg-white text-slate-400">4</span><b class="mt-3 block">Delivered</b><small class="text-slate-500">Pending</small></li>
+        </ol>
+        <dl class="mt-10 grid gap-6 border-t border-slate-200 pt-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div><dt class="text-sm font-semibold text-slate-500">Estimated Delivery</dt><dd class="mt-2 font-bold">May 11, 06:00 PM</dd><dd class="text-sm text-slate-500">Today</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Current Location</dt><dd class="mt-2 font-bold">Chicago, IL, USA</dd><dd class="text-sm text-slate-500">Transit Hub</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Carrier Notes</dt><dd class="mt-2">Shipment en route to local facility.</dd></div>
+          <div><dt class="text-sm font-semibold text-slate-500">Weight / Dimensions</dt><dd class="mt-2 font-bold">2.4 kg</dd><dd class="text-sm text-slate-500">30 × 25 × 15 cm</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="features" class="border-y border-slate-200 bg-mist py-24">
+      <div class="mx-auto max-w-7xl px-5 lg:px-8"><div class="max-w-2xl"><h2 class="text-4xl font-extrabold tracking-tight">Confidence at every handoff.</h2><p class="mt-4 text-lg text-slate-600">The clarity customers need, backed by the controls your operations team expects.</p></div>
+        <div class="mt-14 grid gap-10 md:grid-cols-3">
+          <article class="border-l-2 border-blue pl-6"><span class="text-3xl text-blue">◉</span><h3 class="mt-5 text-xl font-extrabold">End-to-End Visibility</h3><p class="mt-3 leading-7 text-slate-600">Follow milestone-based updates from pickup through final delivery with a clear, shared shipment history.</p></article>
+          <article class="border-l-2 border-blue pl-6"><span class="text-3xl text-blue">♢</span><h3 class="mt-5 text-xl font-extrabold">Instant Notifications</h3><p class="mt-3 leading-7 text-slate-600">Keep customers informed with timely SMS and email alerts whenever a shipment status changes.</p></article>
+          <article class="border-l-2 border-green pl-6"><span class="text-3xl text-green">◇</span><h3 class="mt-5 text-xl font-extrabold">Secure Handling</h3><p class="mt-3 leading-7 text-slate-600">Maintain detailed activity logs, authorized access, and tamper-resistant updates across the journey.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin" class="bg-navy py-24 text-white">
+      <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.7fr_1.3fr] lg:px-8">
+        <div class="max-w-md"><h2 class="text-4xl font-extrabold leading-tight tracking-tight">Built for control.<br>Designed for trust.</h2><p class="mt-6 leading-7 text-slate-300">Admins can securely update shipment statuses, add location notes, and notify customers—keeping everyone informed with complete clarity.</p>
+          <ul class="mt-10 space-y-6"><li><b class="text-green">Role-based access</b><p class="text-sm text-slate-300">Only authorized users can manage shipments.</p></li><li><b class="text-green">Accurate updates</b><p class="text-sm text-slate-300">Real-time changes build customer confidence.</p></li><li><b class="text-green">Customer notifications</b><p class="text-sm text-slate-300">Automatic alerts accompany every update.</p></li></ul>
+        </div>
+        <div class="grid overflow-hidden rounded-2xl bg-white text-navy shadow-2xl xl:grid-cols-[1.2fr_.8fr]">
+          <div class="overflow-x-auto border-b border-slate-200 xl:border-b-0 xl:border-r"><div class="flex items-center justify-between p-6"><h3 class="font-extrabold">Active Shipments</h3><button class="text-sm font-bold text-blue">View all</button></div>
+            <table class="w-full min-w-[520px] text-left text-sm"><thead class="border-y border-slate-200 bg-mist text-xs text-slate-500"><tr><th class="p-4">Tracking ID</th><th class="p-4">Customer</th><th class="p-4">Status</th><th class="p-4">Last Updated</th></tr></thead><tbody id="shipmentRows" class="divide-y divide-slate-100"><tr><td class="p-4 font-bold text-blue">TS-847291</td><td class="p-4">Alex Johnson</td><td class="p-4"><span class="rounded-md bg-blue/10 px-2 py-1 font-semibold text-blue">In Transit</span></td><td class="p-4 text-slate-500">May 11, 10:15 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-836554</td><td class="p-4">Maria Gomez</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Out for Delivery</span></td><td class="p-4 text-slate-500">May 11, 09:30 AM</td></tr><tr><td class="p-4 font-bold text-blue">TS-829113</td><td class="p-4">David Lee</td><td class="p-4"><span class="rounded-md bg-green/10 px-2 py-1 font-semibold text-green">Delivered</span></td><td class="p-4 text-slate-500">May 10, 06:45 PM</td></tr></tbody></table>
+          </div>
+          <form id="updateForm" class="p-6"><h3 class="font-extrabold">Update Status</h3><label class="mt-5 block text-xs font-bold" for="adminId">Tracking ID</label><input id="adminId" required value="TS-847291" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue focus:ring-4 focus:ring-blue/10"><label class="mt-4 block text-xs font-bold" for="status">Status</label><select id="status" class="mt-2 w-full rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue"><option>Processing</option><option selected>In Transit</option><option>Customs Clearance</option><option>Out for Delivery</option><option>Delivered</option></select><label class="mt-4 block text-xs font-bold" for="notes">Location / Notes</label><textarea id="notes" rows="4" class="mt-2 w-full resize-none rounded-lg border border-slate-300 px-3 py-3 outline-none focus:border-blue" placeholder="Add the current location and carrier notes">Shipment en route to local facility.</textarea><button class="mt-5 w-full rounded-lg bg-blue px-4 py-3.5 font-bold text-white transition hover:bg-blue/90">Save and Notify Customer</button><p id="saveMessage" class="mt-3 min-h-5 text-sm font-semibold text-green" aria-live="polite"></p></form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="support" class="bg-white"><div class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8"><div><div class="text-xl font-extrabold">TrackSwift <span class="text-blue">⟶</span></div><p class="mt-2 text-xs text-slate-500">© 2026 TrackSwift. All rights reserved.</p></div><nav class="flex flex-wrap gap-6 text-sm font-semibold"><a href="#">Privacy Policy</a><a href="mailto:support@trackswift.example">Customer Support</a><a href="#admin">Admin Login</a></nav></div></footer>
+
+  <script>
+    document.getElementById('trackForm').addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('trackingId').value.trim();const out=document.getElementById('trackMessage');out.textContent=id?`Shipment ${id.toUpperCase()} found — showing latest tracking activity below.`:'Enter a tracking ID to continue.';if(id)document.getElementById('how').scrollIntoView({behavior:'smooth'});});
+    document.getElementById('updateForm').addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('adminId').value.trim().toUpperCase();const status=document.getElementById('status').value;document.getElementById('saveMessage').textContent=`${id} updated to “${status}”. Customer notified.`;});
+  </script>
+</body>
+</html>
