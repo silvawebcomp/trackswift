@@ -8,9 +8,9 @@ function getJwtSecret() {
   return secret;
 }
 
-function signAccessToken(user) {
+function signAccessToken(admin) {
   return jwt.sign(
-    { sub: user.id, email: user.email, role: user.role },
+    { sub: admin.id, email: admin.email, access: 'ADMIN' },
     getJwtSecret(),
     { expiresIn: process.env.JWT_EXPIRES_IN || '8h', issuer: 'trackswift' }
   );
@@ -20,8 +20,8 @@ function verifyAccessToken(token) {
   return jwt.verify(token, getJwtSecret(), { issuer: 'trackswift' });
 }
 
-function publicUser(user) {
-  return { id: user.id, name: user.name, email: user.email, role: user.role };
+function publicAdmin(admin) {
+  return { id: admin.id, name: admin.name, email: admin.email };
 }
 
-module.exports = { publicUser, signAccessToken, verifyAccessToken };
+module.exports = { publicAdmin, signAccessToken, verifyAccessToken };

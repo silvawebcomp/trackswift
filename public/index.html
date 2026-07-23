@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TrackSwift provides private shipment tracking from Italy to the United States using your tracking number and email.">
+  <title>TrackSwift — Private shipment tracking</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <div id="landingApp">
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="brand" href="#track" aria-label="TrackSwift home">
+          <span>TrackSwift</span>
+          <svg viewBox="0 0 28 18" aria-hidden="true"><path d="M1 9h23M17 2l7 7-7 7"/></svg>
+        </a>
+        <nav class="main-nav" aria-label="Primary navigation">
+          <a href="#track">Track</a>
+          <a href="#how">How It Works</a>
+          <a href="#features">Features</a>
+          <a href="#support">Support</a>
+        </nav>
+        <a class="button button-outline button-small" href="#admin">Admin Portal</a>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section id="track" class="hero-section">
+        <div class="hero-shell">
+          <div class="hero-copy">
+            <h1>Real-time tracking from warehouse to doorstep.</h1>
+            <p class="hero-lede">Use the tracking number supplied with your shipment and the email registered by TrackSwift to see every verified update.</p>
+
+            <form id="trackForm" class="tracking-form" novalidate>
+              <div class="field-group">
+                <label for="trackingId">Tracking number</label>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="M4 7v10l8 4 8-4V7M12 11v10"/></svg>
+                  <input id="trackingId" name="trackingId" placeholder="TS-260722-A1B2C3" autocomplete="off" autocapitalize="characters" required>
+                </div>
+              </div>
+              <div class="field-group">
+                <label for="trackingEmail">Email address</label>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>
+                  <input id="trackingEmail" name="email" type="email" placeholder="name@example.com" autocomplete="email" required>
+                </div>
+              </div>
+              <button id="trackSubmit" class="button button-primary tracking-submit" type="submit">
+                <span>Track shipment</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5"/></svg>
+              </button>
+            </form>
+            <p class="privacy-note">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 9V6a5 5 0 0 1 10 0v3"/><rect x="3" y="9" width="14" height="9" rx="2"/></svg>
+              No password is needed. Your tracking number and email keep shipment details private.
+            </p>
+            <p id="trackMessage" class="form-message" aria-live="polite"></p>
+          </div>
+
+          <div class="route-visual" aria-label="Illustration of a shipment travelling from Italy to the United States">
+            <svg class="route-line" viewBox="0 0 620 520" fill="none" aria-hidden="true">
+              <path d="M105 75C100 170 205 120 235 225c25 90 150 25 160 135 5 55 55 65 120 85"/>
+            </svg>
+            <div class="route-stop route-stop-one"><span>IT</span><div><strong>Milan, Italy</strong><p>Package registered<br>Origin facility</p></div></div>
+            <div class="route-stop route-stop-two"><span>AIR</span><div><strong>International Transit</strong><p class="accent-text">Live journey updates</p></div></div>
+            <div class="route-stop route-stop-three"><span>US</span><div><strong>United States Gateway</strong><p>Customs and arrival</p></div></div>
+            <div class="route-stop route-stop-four"><span>NY</span><div><strong>Final Destination</strong><p>Delivery milestone</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="workflow-section">
+        <div class="section-heading">
+          <h2>One private view of the entire journey.</h2>
+          <p>You only see shipment details after the tracking number and registered email match.</p>
+        </div>
+        <div class="workflow-steps">
+          <article><span>01</span><h3>Enter your details</h3><p>Use the tracking number and email registered when the shipment was created.</p></article>
+          <article><span>02</span><h3>Verify the match</h3><p>TrackSwift checks both details before revealing any customer or delivery information.</p></article>
+          <article><span>03</span><h3>Follow every update</h3><p>See the current location, delivery estimate, carrier notes, and full progress timeline.</p></article>
+        </div>
+      </section>
+
+      <section id="trackingResult" class="result-section" hidden aria-live="polite">
+        <div class="result-card">
+          <div class="result-header">
+            <div>
+              <p class="result-label">Verified shipment</p>
+              <h2 id="resultTrackingId">—</h2>
+              <p id="resultRoute">—</p>
+            </div>
+            <div class="result-status-wrap">
+              <span id="resultStatus" class="status-pill">—</span>
+              <small id="resultUpdated">—</small>
+            </div>
+          </div>
+
+          <div class="result-summary">
+            <div><span>Customer</span><strong id="resultCustomer">—</strong></div>
+            <div><span>Shipment</span><strong id="resultDescription">—</strong></div>
+            <div><span>Estimated delivery</span><strong id="resultEta">—</strong></div>
+            <div><span>Current location</span><strong id="resultLocation">—</strong></div>
+          </div>
+
+          <div class="timeline-wrap">
+            <h3>Progress timeline</h3>
+            <ol id="customerTimeline" class="timeline"></ol>
+          </div>
+
+          <div class="shipment-notes">
+            <div>
+              <span>Carrier notes</span>
+              <p id="resultNotes">—</p>
+            </div>
+            <div>
+              <span>Weight / dimensions</span>
+              <p id="resultPackage">—</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features-section">
+        <div class="content-shell">
+          <div class="section-heading align-left">
+            <h2>Confidence at every handoff.</h2>
+            <p>The clarity customers need, backed by the controls your operations team expects.</p>
+          </div>
+          <div class="feature-grid">
+            <article><span class="feature-icon blue-icon">◎</span><h3>End-to-End Visibility</h3><p>Follow milestone-based updates from pickup through final delivery with a clear, shared shipment history.</p></article>
+            <article><span class="feature-icon blue-icon">◇</span><h3>Instant Updates</h3><p>See location and carrier notes as soon as an administrator records a new shipment milestone.</p></article>
+            <article><span class="feature-icon green-icon">◇</span><h3>Private Access</h3><p>Shipment details are released only when the tracking number matches the customer’s registered email.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-promo">
+        <div class="content-shell admin-promo-grid">
+          <div>
+            <h2>Built for control.<br>Designed for trust.</h2>
+            <p>Administrators register shipments, attach the correct customer email, and update every delivery milestone from one secure workspace.</p>
+            <ul>
+              <li><strong>Administrator-only access</strong><span>Only authenticated administrators can create or change shipments.</span></li>
+              <li><strong>Accurate updates</strong><span>Every saved milestone becomes part of the customer’s progress history.</span></li>
+              <li><strong>Customer privacy</strong><span>Customers can open only the shipment matching their tracking number and email.</span></li>
+            </ul>
+            <a class="button button-light" href="#admin">Open Admin Portal</a>
+          </div>
+          <div class="admin-preview" aria-hidden="true">
+            <div class="preview-table">
+              <div class="preview-title"><strong>Active Shipments</strong><span>View all</span></div>
+              <div class="preview-row preview-head"><span>Tracking ID</span><span>Customer</span><span>Status</span></div>
+              <div class="preview-row"><b>TS-260722-A1B2C3</b><span>Alex Johnson</span><em class="status-blue">In Transit</em></div>
+              <div class="preview-row"><b>TS-260721-D4E5F6</b><span>Maria Gomez</span><em class="status-green">Out for Delivery</em></div>
+              <div class="preview-row"><b>TS-260720-G7H8J9</b><span>David Lee</span><em class="status-green">Delivered</em></div>
+            </div>
+            <div class="preview-form">
+              <strong>Update Status</strong>
+              <label>Tracking ID<input value="TS-260722-A1B2C3" readonly></label>
+              <label>Status<input value="International Transit" readonly></label>
+              <label>Location / Notes<textarea readonly>Shipment departed the Milan gateway.</textarea></label>
+              <span class="preview-button">Save Customer Update</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="support" class="site-footer">
+      <div class="content-shell footer-shell">
+        <div><a class="brand" href="#track"><span>TrackSwift</span><svg viewBox="0 0 28 18" aria-hidden="true"><path d="M1 9h23M17 2l7 7-7 7"/></svg></a><p>© 2026 TrackSwift. All rights reserved.</p></div>
+        <nav aria-label="Footer navigation"><a href="#features">Privacy</a><a href="mailto:support@trackswift.example">Customer Support</a><a href="#admin">Admin Login</a></nav>
+      </div>
+    </footer>
+  </div>
+
+  <section id="adminApp" class="admin-app" hidden>
+    <header class="admin-topbar">
+      <a class="brand" href="#track"><span>TrackSwift</span><svg viewBox="0 0 28 18" aria-hidden="true"><path d="M1 9h23M17 2l7 7-7 7"/></svg></a>
+      <div class="admin-top-actions">
+        <span id="adminIdentity"></span>
+        <button id="adminLogout" class="text-button" type="button" hidden>Log out</button>
+        <a class="button button-outline button-small" href="#track">Back to website</a>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section id="adminLoginView" class="admin-login-view">
+        <div class="admin-login-copy">
+          <p class="result-label">Administrator access</p>
+          <h1>Control every shipment update.</h1>
+          <p>This area is reserved for TrackSwift administrators. Customers track packages from the public page using their tracking number and email.</p>
+        </div>
+        <form id="adminLoginForm" class="admin-login-card" novalidate>
+          <h2>Sign in to TrackSwift</h2>
+          <p>Use the administrator credentials configured for this project.</p>
+          <label>Email address<input id="adminEmail" type="email" autocomplete="username" placeholder="admin@trackswift.com" required></label>
+          <label>Password<input id="adminPassword" type="password" autocomplete="current-password" required></label>
+          <button id="adminLoginSubmit" class="button button-primary" type="submit">Sign in securely</button>
+          <p id="adminLoginMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="adminDashboard" class="admin-dashboard" hidden>
+        <div class="dashboard-heading">
+          <div><p class="result-label">Operations workspace</p><h1>Shipment control center</h1><p>Register customer shipments and publish the next verified milestone.</p></div>
+          <button id="openCreateShipment" class="button button-primary" type="button">Register shipment</button>
+        </div>
+
+        <div class="admin-workspace">
+          <section class="shipments-panel">
+            <div class="panel-heading"><div><h2>Active shipments</h2><p id="shipmentCount">0 shipments</p></div><button id="refreshShipments" class="icon-button" type="button" aria-label="Refresh shipments"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5"/><path d="M4 17v-5h5"/><path d="M6.1 8a7 7 0 0 1 11.4-2.3L20 8M4 16l2.5 2.3A7 7 0 0 0 17.9 16"/></svg></button></div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Tracking ID</th><th>Customer</th><th>Route</th><th>Status</th><th>Last updated</th></tr></thead>
+                <tbody id="adminShipmentRows"></tbody>
+              </table>
+              <div id="emptyShipments" class="empty-state" hidden><strong>No shipments yet</strong><p>Register the first customer shipment to begin tracking.</p></div>
+            </div>
+          </section>
+
+          <form id="updateShipmentForm" class="update-panel" novalidate>
+            <div><p class="result-label">Quick action</p><h2>Update status</h2><p>Select a shipment from the table or enter its tracking number.</p></div>
+            <label>Tracking number<input id="updateTrackingId" autocomplete="off" placeholder="TS-260722-A1B2C3" required></label>
+            <label>Progress stage<select id="updateStage" required></select></label>
+            <label>Current location<input id="updateLocation" placeholder="JFK International Airport, New York"></label>
+            <label>Location / carrier notes<textarea id="updateNotes" rows="4" placeholder="Add the update customers should see"></textarea></label>
+            <label>Estimated delivery<input id="updateEta" type="datetime-local"></label>
+            <button id="updateShipmentSubmit" class="button button-primary" type="submit">Save customer update</button>
+            <p id="updateMessage" class="form-message" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <dialog id="createShipmentDialog" class="shipment-dialog">
+    <form id="createShipmentForm" method="dialog" novalidate>
+      <div class="dialog-heading"><div><p class="result-label">New shipment</p><h2>Register customer package</h2><p>The email entered here becomes the customer’s private tracking credential.</p></div><button id="closeCreateShipment" class="icon-button" type="button" aria-label="Close dialog">×</button></div>
+      <div class="form-grid">
+        <label>Customer name<input id="createCustomerName" autocomplete="name" required></label>
+        <label>Customer email<input id="createCustomerEmail" type="email" autocomplete="email" required></label>
+        <label class="full-field">Shipment description<input id="createDescription" placeholder="Personal effects — 1 parcel" required></label>
+        <label>Tracking number <small>Optional</small><input id="createTrackingId" autocapitalize="characters" placeholder="Generated automatically"></label>
+        <label>Estimated delivery<input id="createEta" type="datetime-local"></label>
+        <label>Origin city<input id="createOriginCity" value="Milan" required></label>
+        <label>Origin country<input id="createOriginCountry" value="Italy" required></label>
+        <label>Destination city<input id="createDestinationCity" placeholder="New York" required></label>
+        <label>Destination country<input id="createDestinationCountry" value="United States" required></label>
+        <label>Weight in kg<input id="createWeight" type="number" min="0.01" step="0.01" placeholder="2.40"></label>
+        <label>Dimensions<input id="createDimensions" placeholder="30 × 25 × 15 cm"></label>
+        <label class="full-field">Initial carrier notes<textarea id="createNotes" rows="3" placeholder="Shipment received and registered in Milan."></textarea></label>
+      </div>
+      <div class="dialog-actions"><button id="cancelCreateShipment" class="button button-secondary" type="button">Cancel</button><button id="createShipmentSubmit" class="button button-primary" type="submit">Register shipment</button></div>
+      <p id="createMessage" class="form-message" aria-live="polite"></p>
+    </form>
+  </dialog>
+</body>
+</html>

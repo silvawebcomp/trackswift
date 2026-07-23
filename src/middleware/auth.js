@@ -9,12 +9,13 @@ async function requireAuth(req, _res, next) {
     if (!token) throw new HttpError(401, 'Authentication required.');
 
     const payload = verifyAccessToken(token);
-    const user = await prisma.user.findUnique({
+    if (payload.access !== 'ADMIN') throw new HttpError(401, 'Invalid or expired session.');
+    const admin = await prisma.admin.findUnique({
       where: { id: payload.sub },
-      select: { id: true, name: true, email: true, role: true }
+      select: { id: true, name: true, email: true }
     });
-    if (!user) throw new HttpError(401, 'Invalid or expired session.');
-    req.user = user;
+    if (!admin) throw new HttpError(401, 'Invalid or expired session.');
+    req.admin = admin;
     next();
   } catch (error) {
     next(error.statusCode ? error : new HttpError(401, 'Invalid or expired session.'));
@@ -22,7 +23,7 @@ async function requireAuth(req, _res, next) {
 }
 
 function requireAdmin(req, _res, next) {
-  if (req.user?.role !== 'ADMIN') return next(new HttpError(403, 'Administrator access required.'));
+  if (!req.admin) return next(new HttpError(403, 'Administrator access required.'));
   next();
 }
 

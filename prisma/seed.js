@@ -1,6 +1,6 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
-const { PrismaClient, UserRole } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -14,10 +14,10 @@ async function main() {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-  const admin = await prisma.user.upsert({
+  const admin = await prisma.admin.upsert({
     where: { email },
-    update: { name, passwordHash, role: UserRole.ADMIN },
-    create: { name, email, passwordHash, role: UserRole.ADMIN }
+    update: { name, passwordHash },
+    create: { name, email, passwordHash }
   });
 
   console.log(`Administrator ready: ${admin.email}`);

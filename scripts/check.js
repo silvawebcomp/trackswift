@@ -8,7 +8,7 @@ const files = [
   'src/routes/shipmentRoutes.js', 'src/routes/adminRoutes.js',
   'src/services/authService.js', 'src/services/shipmentService.js',
   'src/utils/auth.js', 'src/utils/asyncHandler.js', 'src/utils/httpError.js',
-  'prisma/seed.js'
+  'prisma/seed.js', 'public/app.js'
 ];
 
 for (const file of files) {
@@ -17,7 +17,7 @@ for (const file of files) {
 }
 
 const schema = fs.readFileSync(path.join(root, 'prisma/schema.prisma'), 'utf8');
-for (const requiredModel of ['model User', 'model Shipment', 'model ProgressEvent']) {
+for (const requiredModel of ['model Admin', 'model Shipment', 'model ProgressEvent']) {
   if (!schema.includes(requiredModel)) throw new Error(`Missing ${requiredModel}`);
 }
 

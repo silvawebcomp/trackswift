@@ -10,13 +10,32 @@ const VALID_STAGES = new Set([
 ]);
 
 const shipmentInclude = {
-  customer: { select: { id: true, name: true, email: true } },
   progressEvents: {
     where: { customerVisible: true },
     orderBy: [{ eventTime: 'asc' }, { createdAt: 'asc' }],
-    select: { id: true, stage: true, location: true, notes: true, eventTime: true }
+    select: {
+      id: true,
+      stage: true,
+      location: true,
+      notes: true,
+      eventTime: true
+    }
   }
 };
+
+function normalizeEmail(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function normalizeTrackingId(value) {
+  return String(value || '').trim().toUpperCase();
+}
+
+function validateEmail(email) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new HttpError(400, 'Enter a valid email address.');
+  }
+}
 
 function makeTrackingId() {
   const day = new Date().toISOString().slice(2, 10).replaceAll('-', '');
@@ -30,50 +49,122 @@ function parseOptionalDate(value, label) {
   return date;
 }
 
-async function listForUser(user) {
+function parseOptionalWeight(value) {
+  if (value === '' || value == null) return null;
+  const weight = Number(value);
+  if (!Number.isFinite(weight) || weight <= 0 || weight > 100000) {
+    throw new HttpError(400, 'Weight must be a positive number.');
+  }
+  return weight;
+}
+
+function customerShipment(shipment) {
+  return {
+    trackingId: shipment.trackingId,
+    customerName: shipment.customerName,
+    description: shipment.description,
+    originCity: shipment.originCity,
+    originCountry: shipment.originCountry,
+    destinationCity: shipment.destinationCity,
+    destinationCountry: shipment.destinationCountry,
+    weightKg: shipment.weightKg,
+    dimensions: shipment.dimensions,
+    currentStage: shipment.currentStage,
+    currentLocation: shipment.currentLocation,
+    estimatedDelivery: shipment.estimatedDelivery,
+    carrierNotes: shipment.carrierNotes,
+    deliveredAt: shipment.deliveredAt,
+    createdAt: shipment.createdAt,
+    updatedAt: shipment.updatedAt,
+    progressEvents: shipment.progressEvents
+  };
+}
+
+async function findForCustomer(data = {}) {
+  const trackingId = normalizeTrackingId(data.trackingId);
+  const email = normalizeEmail(data.email);
+  if (!trackingId || !email) {
+    throw new HttpError(400, 'Enter your tracking number and email address.');
+  }
+  validateEmail(email);
+
+  const shipment = await prisma.shipment.findUnique({
+    where: { trackingId },
+    include: shipmentInclude
+  });
+
+  if (!shipment || normalizeEmail(shipment.customerEmail) !== email) {
+    throw new HttpError(
+      404,
+      'We could not match that tracking number and email. Check both entries and try again.'
+    );
+  }
+
+  return customerShipment(shipment);
+}
+
+async function listForAdmin() {
   return prisma.shipment.findMany({
-    where: user.role === 'ADMIN' ? {} : { customerId: user.id },
     include: shipmentInclude,
     orderBy: { updatedAt: 'desc' }
   });
 }
 
-async function findAccessible(trackingId, user) {
-  const shipment = await prisma.shipment.findUnique({ where: { trackingId }, include: shipmentInclude });
-  if (!shipment || (user.role !== 'ADMIN' && shipment.customerId !== user.id)) {
-    throw new HttpError(404, 'Shipment not found.');
-  }
-  return shipment;
-}
+async function createShipment(admin, data = {}) {
+  const customerName = String(data.customerName || '').trim();
+  const customerEmail = normalizeEmail(data.customerEmail);
+  const description = String(data.description || '').trim();
+  const originCity = String(data.originCity || '').trim();
+  const destinationCity = String(data.destinationCity || '').trim();
 
-async function createShipment(admin, data) {
-  const customerEmail = String(data.customerEmail || '').trim().toLowerCase();
-  const customer = await prisma.user.findUnique({ where: { email: customerEmail } });
-  if (!customer || customer.role !== 'CUSTOMER') throw new HttpError(404, 'Customer account not found.');
-  for (const field of ['description', 'originCity', 'destinationCity']) {
-    if (!String(data[field] || '').trim()) throw new HttpError(400, `${field} is required.`);
+  if (customerName.length < 2) throw new HttpError(400, 'Customer name is required.');
+  validateEmail(customerEmail);
+  for (const [label, value] of [
+    ['Description', description],
+    ['Origin city', originCity],
+    ['Destination city', destinationCity]
+  ]) {
+    if (!value) throw new HttpError(400, `${label} is required.`);
   }
-  const estimatedDelivery = parseOptionalDate(data.estimatedDelivery, 'estimated delivery date');
 
-  const trackingId = makeTrackingId();
+  const requestedTrackingId = normalizeTrackingId(data.trackingId);
+  if (requestedTrackingId && !/^[A-Z0-9-]{6,40}$/.test(requestedTrackingId)) {
+    throw new HttpError(400, 'Tracking number must contain 6–40 letters, numbers, or hyphens.');
+  }
+  const trackingId = requestedTrackingId || makeTrackingId();
+  const existing = await prisma.shipment.findUnique({
+    where: { trackingId },
+    select: { id: true }
+  });
+  if (existing) throw new HttpError(409, 'That tracking number is already in use.');
+
+  const estimatedDelivery = parseOptionalDate(
+    data.estimatedDelivery,
+    'estimated delivery date'
+  );
+  const weightKg = parseOptionalWeight(data.weightKg);
+  const carrierNotes = String(data.carrierNotes || '').trim() || 'Shipment registered.';
+
   return prisma.$transaction(async transaction => {
     const shipment = await transaction.shipment.create({
       data: {
         trackingId,
-        customerId: customer.id,
+        customerName,
+        customerEmail,
         createdById: admin.id,
-        description: data.description.trim(),
-        originCity: data.originCity.trim(),
+        description,
+        originCity,
         originCountry: String(data.originCountry || 'Italy').trim(),
-        destinationCity: data.destinationCity.trim(),
+        destinationCity,
         destinationCountry: String(data.destinationCountry || 'United States').trim(),
-        weightKg: data.weightKg == null ? null : data.weightKg,
-        dimensions: data.dimensions?.trim() || null,
-        currentLocation: data.originCity.trim(),
+        weightKg,
+        dimensions: String(data.dimensions || '').trim() || null,
+        currentLocation: originCity,
         estimatedDelivery,
-        carrierNotes: data.carrierNotes?.trim() || 'Shipment created.'
+        carrierNotes
       }
     });
+
     await transaction.progressEvent.create({
       data: {
         shipmentId: shipment.id,
@@ -83,42 +174,68 @@ async function createShipment(admin, data) {
         createdById: admin.id
       }
     });
-    return transaction.shipment.findUnique({ where: { id: shipment.id }, include: shipmentInclude });
+
+    return transaction.shipment.findUnique({
+      where: { id: shipment.id },
+      include: shipmentInclude
+    });
   });
 }
 
-async function updateProgress(admin, trackingId, data) {
+async function updateProgress(admin, trackingIdValue, data = {}) {
+  const trackingId = normalizeTrackingId(trackingIdValue);
   if (!VALID_STAGES.has(data.stage)) throw new HttpError(400, 'Invalid shipment stage.');
-  const existing = await prisma.shipment.findUnique({ where: { trackingId }, select: { id: true } });
+
+  const existing = await prisma.shipment.findUnique({
+    where: { trackingId },
+    select: { id: true }
+  });
   if (!existing) throw new HttpError(404, 'Shipment not found.');
+
   const eventTime = data.eventTime ? new Date(data.eventTime) : new Date();
   if (Number.isNaN(eventTime.getTime())) throw new HttpError(400, 'Invalid event time.');
-  const estimatedDelivery = parseOptionalDate(data.estimatedDelivery, 'estimated delivery date');
+  const estimatedDelivery = parseOptionalDate(
+    data.estimatedDelivery,
+    'estimated delivery date'
+  );
+  const location = String(data.location || '').trim();
+  const notes = String(data.notes || '').trim();
 
   return prisma.$transaction(async transaction => {
     const shipment = await transaction.shipment.update({
       where: { trackingId },
       data: {
         currentStage: data.stage,
-        currentLocation: data.location?.trim() || undefined,
-        carrierNotes: data.notes?.trim() || undefined,
+        currentLocation: location || undefined,
+        carrierNotes: notes || undefined,
         estimatedDelivery: estimatedDelivery || undefined,
-        deliveredAt: data.stage === 'DELIVERED' ? eventTime : undefined
+        deliveredAt: data.stage === 'DELIVERED' ? eventTime : null
       }
     });
+
     await transaction.progressEvent.create({
       data: {
         shipmentId: shipment.id,
         stage: data.stage,
-        location: data.location?.trim() || shipment.currentLocation,
-        notes: data.notes?.trim() || null,
+        location: location || shipment.currentLocation,
+        notes: notes || null,
         eventTime,
         customerVisible: data.customerVisible !== false,
         createdById: admin.id
       }
     });
-    return transaction.shipment.findUnique({ where: { id: shipment.id }, include: shipmentInclude });
+
+    return transaction.shipment.findUnique({
+      where: { id: shipment.id },
+      include: shipmentInclude
+    });
   });
 }
 
-module.exports = { createShipment, findAccessible, listForUser, updateProgress, VALID_STAGES };
+module.exports = {
+  VALID_STAGES,
+  createShipment,
+  findForCustomer,
+  listForAdmin,
+  updateProgress
+};

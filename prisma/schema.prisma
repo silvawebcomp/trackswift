@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  CUSTOMER
-  ADMIN
-}
-
 enum ShipmentStage {
   SHIPMENT_CREATED
   PROCESSING_IN_ITALY
@@ -25,45 +20,43 @@ enum ShipmentStage {
   DELIVERED
 }
 
-model User {
+model Admin {
   id               String          @id @default(cuid())
   name             String
   email            String          @unique
   passwordHash     String
-  role             UserRole        @default(CUSTOMER)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  shipments        Shipment[]      @relation("CustomerShipments")
   createdShipments Shipment[]      @relation("ShipmentCreator")
   progressEvents   ProgressEvent[] @relation("ProgressUpdatedBy")
 
-  @@index([role, createdAt])
+  @@index([createdAt])
 }
 
 model Shipment {
-  id                String        @id @default(cuid())
-  trackingId        String        @unique
-  customerId        String
-  createdById       String
-  description       String
-  originCity        String
-  originCountry     String        @default("Italy")
-  destinationCity   String
+  id                 String        @id @default(cuid())
+  trackingId         String        @unique
+  customerName       String
+  customerEmail      String
+  createdById        String
+  description        String
+  originCity         String
+  originCountry      String        @default("Italy")
+  destinationCity    String
   destinationCountry String       @default("United States")
-  weightKg          Decimal?      @db.Decimal(10, 2)
-  dimensions        String?
-  currentStage      ShipmentStage @default(SHIPMENT_CREATED)
-  currentLocation   String?
+  weightKg           Decimal?      @db.Decimal(10, 2)
+  dimensions         String?
+  currentStage       ShipmentStage @default(SHIPMENT_CREATED)
+  currentLocation    String?
   estimatedDelivery DateTime?
-  carrierNotes      String?
-  deliveredAt       DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  customer          User          @relation("CustomerShipments", fields: [customerId], references: [id], onDelete: Restrict)
-  createdBy         User          @relation("ShipmentCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  progressEvents    ProgressEvent[]
+  carrierNotes       String?
+  deliveredAt        DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  createdBy          Admin         @relation("ShipmentCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  progressEvents     ProgressEvent[]
 
-  @@index([customerId, updatedAt])
+  @@index([customerEmail, updatedAt])
   @@index([createdById, createdAt])
   @@index([currentStage, updatedAt])
 }
@@ -79,7 +72,7 @@ model ProgressEvent {
   createdById     String
   createdAt       DateTime      @default(now())
   shipment        Shipment      @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
-  createdBy       User          @relation("ProgressUpdatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  createdBy       Admin         @relation("ProgressUpdatedBy", fields: [createdById], references: [id], onDelete: Restrict)
 
   @@index([shipmentId, eventTime])
   @@index([createdById, createdAt])

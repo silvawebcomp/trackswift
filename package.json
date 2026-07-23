@@ -1,8 +1,8 @@
 {
   "name": "trackswift",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Authenticated shipment tracking for customers and administrators.",
+  "description": "Private shipment verification for customers and a secure administrator control portal.",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
